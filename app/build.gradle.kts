@@ -1,9 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
 }
 
 android {
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace = "com.mohsin.fiatx"
     compileSdk = 35
 
@@ -15,6 +21,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "CURRENCY_API_BASE_URL",
+            "\"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/\""
+        )
+
+        buildConfigField(
+            "String",
+            "CURRENCY_API_FALLBACK_URL",
+            "\"https://latest.currency-api.pages.dev/v1/\""
+        )
     }
 
     buildTypes {
@@ -42,6 +60,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -53,4 +72,10 @@ dependencies {
     implementation (libs.androidx.room.ktx)
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.logging.interceptor)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    kapt(libs.androidx.room.compiler)
+    testImplementation(kotlin("test"))
 }
