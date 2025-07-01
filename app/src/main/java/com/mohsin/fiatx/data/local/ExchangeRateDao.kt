@@ -5,9 +5,6 @@ import androidx.room.*
 @Dao
 interface ExchangeRateDao {
 
-    @Query("SELECT * FROM exchange_rates WHERE base = :base")
-    suspend fun getRatesByBase(base: String): List<ExchangeRateEntity>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRates(rates: List<ExchangeRateEntity>)
 
@@ -16,4 +13,7 @@ interface ExchangeRateDao {
 
     @Query("SELECT MAX(timestamp) FROM exchange_rates WHERE base = :base")
     suspend fun getLastUpdatedTime(base: String): Long?
+
+    @Query("SELECT rate FROM exchange_rates WHERE base = :base AND target = :target LIMIT 1")
+    suspend fun getRate(base: String, target: String): Double?
 }

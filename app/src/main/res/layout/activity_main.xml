@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
@@ -7,6 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:padding="16dp">
+
+    <!-- Existing UI -->
 
     <Spinner
         android:id="@+id/spinnerBase"
@@ -31,7 +34,7 @@
         android:id="@+id/editTextAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter amount"
+        android:hint="@string/enter_amount"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@id/spinnerTarget"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +45,7 @@
         android:id="@+id/buttonConvert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Convert"
+        android:text="@string/convert"
         app:layout_constraintTop_toBottomOf="@id/editTextAmount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +67,7 @@
             android:id="@+id/textLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your amount is: "
+            android:text="@string/your_amount_is"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -76,5 +79,32 @@
             android:textSize="16sp"
             android:textStyle="bold"/>
     </LinearLayout>
+
+    <!-- Overlay ProgressBar -->
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Overlay TextView for loading message -->
+    <TextView
+        android:id="@+id/textLoadingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fetching_currencies"
+        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

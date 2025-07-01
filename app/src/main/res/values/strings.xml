@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FiatX</string>
+    <string name="fetching_currencies">Fetching currencies...</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="convert">Convert</string>
+    <string name="your_amount_is">Your amount is:</string>
 </resources>
