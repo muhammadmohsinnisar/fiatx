@@ -61,6 +61,23 @@ FiatX is a lightweight Android app for converting between fiat currencies using 
 
 ---
 
+## APK File
+
+- A debug APK of the app is included for quick installation and testing without building the
+  project.
+  **Location:**
+  ``
+  cd app/apks/debug
+  ``
+
+**Installation:**
+
+- Connect your Android device (with USB debugging enabled) or start an emulator, then run:
+  ``
+  adb install -r app/apks/debug/app-debug.apk
+  ``
+
+---
 
 ## License
 
