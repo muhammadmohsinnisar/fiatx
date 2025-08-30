@@ -54,6 +54,8 @@ class CurrencyViewModel(
     @SuppressLint("DefaultLocale")
     fun convertCurrency(base: String, target: String, amount: Double) {
         viewModelScope.launch {
+            _isLoading.value = true
+            _conversionResult.value = null // Clear previous result to ensure StateFlow emits
             try {
                 val rate = fiatCurrencyRepository.getRateFromDb(base, target)
                 if (rate != null) {
@@ -80,6 +82,8 @@ class CurrencyViewModel(
             } catch (e: Exception) {
                 _errorMessage.value = "Conversion failed: ${e.message}"
                 Log.d("CurrencyViewModel", "Conversion failed: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
