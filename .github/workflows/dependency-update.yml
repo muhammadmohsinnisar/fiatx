@@ -1,0 +1,171 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Check for dependency updates
+      run: ./gradlew dependencyUpdates
+
+    - name: Upload dependency report
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-updates-report
+        path: build/dependencyUpdates/report.txt
+
+    - name: Create issue for outdated dependencies
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          try {
+            const reportPath = 'build/dependencyUpdates/report.txt';
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              
+              // Check if there are outdated dependencies
+              if (report.includes('outdated dependencies')) {
+                const body = `## 📦 Dependency Updates Available
+                
+                Automated dependency check found outdated dependencies.
+                
+                **Report:**
+                \`\`\`
+                ${report}
+                \`\`\`
+                
+                **Action Required:**
+                - Review the outdated dependencies
+                - Update them in \`build.gradle.kts\` files
+                - Test the app thoroughly after updates
+                - Create a PR with the updates
+                
+                **Auto-generated on:** ${new Date().toISOString()}`;
+                
+                // Check if issue already exists
+                const issues = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: ['dependencies', 'automated'],
+                  state: 'open'
+                });
+                
+                if (issues.data.length === 0) {
+                  await github.rest.issues.create({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    title: '📦 Dependency Updates Available',
+                    body: body,
+                    labels: ['dependencies', 'automated', 'enhancement']
+                  });
+                }
+              }
+            }
+          } catch (error) {
+            console.log('No dependency report found or error reading report');
+          }
+
+  gradle-wrapper-update:
+    name: Update Gradle Wrapper
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Update Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+
+    - name: Check for Gradle updates
+      run: |
+        CURRENT_VERSION=$(grep "distributionUrl" gradle/wrapper/gradle-wrapper.properties | sed 's/.*gradle-\(.*\)-bin.zip/\1/')
+        echo "Current Gradle version: $CURRENT_VERSION"
+        
+        # Get latest Gradle version
+        LATEST_VERSION=$(curl -s https://api.github.com/repos/gradle/gradle/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/')
+        echo "Latest Gradle version: $LATEST_VERSION"
+        
+        if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+          echo "GRADLE_UPDATE_AVAILABLE=true" >> $GITHUB_ENV
+          echo "CURRENT_GRADLE_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+          echo "LATEST_GRADLE_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+        else
+          echo "GRADLE_UPDATE_AVAILABLE=false" >> $GITHUB_ENV
+        fi
+
+    - name: Create Gradle update issue
+      if: env.GRADLE_UPDATE_AVAILABLE == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const currentVersion = process.env.CURRENT_GRADLE_VERSION;
+          const latestVersion = process.env.LATEST_GRADLE_VERSION;
+          
+          const body = `## 🔧 Gradle Wrapper Update Available
+          
+          **Current Version:** ${currentVersion}
+          **Latest Version:** ${latestVersion}
+          
+          **To update:**
+          \`\`\`bash
+          ./gradlew wrapper --gradle-version ${latestVersion}
+          \`\`\`
+          
+          **Benefits:**
+          - Latest features and improvements
+          - Security updates
+          - Performance enhancements
+          - Bug fixes
+          
+          **Auto-generated on:** ${new Date().toISOString()}`;
+          
+          // Check if issue already exists
+          const issues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['gradle', 'automated'],
+            state: 'open'
+          });
+          
+          if (issues.data.length === 0) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔧 Update Gradle Wrapper to ${latestVersion}`,
+              body: body,
+              labels: ['gradle', 'automated', 'enhancement']
+            });
+          }
