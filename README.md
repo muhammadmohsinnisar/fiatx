@@ -1,6 +1,6 @@
-# FiatX - Professional Currency Converter Android App
+# FiatX - Currency Converter Android App
 
-FiatX is a modern, professional Android app for converting between fiat currencies using real-time exchange rates. Built with Material Design 3, Edge-to-Edge UI, and advanced search functionality, it delivers a premium user experience with fast and reliable currency conversions, even offline.
+FiatX is a modern Android app for converting between fiat currencies using real-time exchange rates. Built with Material Design 3, Edge-to-Edge UI, and advanced search functionality, it delivers a premium user experience with fast and reliable currency conversions, even offline.
 
 ---
 
