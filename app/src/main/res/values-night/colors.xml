@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Colors - Based on App Icon -->
+    <color name="primary_dark">#69F0AE</color>
+    <color name="primary_variant_dark">#00E676</color>
+    <color name="primary_light_dark">#1E1E1E</color>
+    
+    <color name="secondary_dark">#FFB74D</color>
+    <color name="secondary_variant_dark">#FFA726</color>
+    <color name="secondary_light_dark">#2D2D2D</color>
+    
+    <color name="surface_dark">#1E1E1E</color>
+    <color name="surface_variant_dark">#2D2D2D</color>
+    <color name="background_dark">#121212</color>
+    
+    <color name="on_primary_dark">#000000</color>
+    <color name="on_secondary_dark">#000000</color>
+    <color name="on_surface_dark">#E0E0E0</color>
+    <color name="on_background_dark">#E0E0E0</color>
+    <color name="text_secondary_dark">#A0A0A0</color>
+    
+    <color name="card_background_dark">#1E1E1E</color>
+    <color name="divider_dark">#2D2D2D</color>
+    <color name="outline_dark">#2D2D2D</color>
+</resources>
