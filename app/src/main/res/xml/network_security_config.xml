@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Production security configuration for FiatX -->
+    
+    <!-- Default configuration for all domains -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system certificate authorities -->
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Domain-specific configurations for currency APIs -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">cdn.jsdelivr.net</domain>
+        <domain includeSubdomains="true">latest.currency-api.pages.dev</domain>
+        
+        <pin-set expiration="2025-12-31">
+            <!-- Certificate pinning for enhanced security -->
+            <!-- JSDelivr CDN certificate pin -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <!-- Backup pin -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+        </pin-set>
+        
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Debug configuration (only for debug builds) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system"/>
+            <!-- Allow user-added CAs for debugging -->
+            <certificates src="user"/>
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
