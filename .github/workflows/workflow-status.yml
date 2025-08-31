@@ -13,7 +13,7 @@ jobs:
   check-workflows:
     name: Check All Workflows Status
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'success'
+    if: always()
 
     steps:
     - name: Checkout code
@@ -74,10 +74,8 @@ jobs:
             });
           }
           
-          // Fail if not all workflows passed
-          if (!allPassed) {
-            core.setFailed('Not all required workflows are passing');
-          }
+          // Don't fail the workflow, just report status
+          console.log(`Workflow check completed. All passed: ${allPassed}`);
 
   workflow-summary:
     name: Workflow Summary

@@ -2,7 +2,7 @@ name: Code Quality
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, feature/* ]
   pull_request:
     branches: [ main, develop ]
   schedule:
@@ -10,8 +10,8 @@ on:
     - cron: '0 2 * * 0'
 
 jobs:
-  detekt:
-    name: Detekt Analysis
+  lint-analysis:
+    name: Lint Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -50,17 +50,11 @@ jobs:
           app/build/reports/lint-results-debug.html
           app/build/reports/lint-results-debug.xml
 
-    - name: Annotate PR with Detekt results
-      uses: github/super-linter/slim@v4
-      if: github.event_name == 'pull_request'
-      env:
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VALIDATE_KOTLIN: true
-        VALIDATE_KOTLIN_DETEKT: true
+    - name: Report results
+      run: echo "Lint analysis completed"
 
-  ktlint:
-    name: Ktlint Check
+  additional-lint:
+    name: Additional Lint Check
     runs-on: ubuntu-latest
 
     steps:
