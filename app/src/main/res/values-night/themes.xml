@@ -38,4 +38,20 @@
         <item name="cardBackgroundColor">@color/surface_dark</item>
         <item name="android:layout_margin">8dp</item>
     </style>
+    
+    <!-- Dark Splash Screen Theme -->
+    <style name="Theme.FiatX.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.FiatX</item>
+        <!-- Edge-to-Edge for splash -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceStatusBarContrast">true</item>
+        <item name="android:enforceNavigationBarContrast">true</item>
+    </style>
 </resources>

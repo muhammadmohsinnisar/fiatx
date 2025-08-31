@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M54,54m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0" />
+    
+    <!-- Currency symbol background -->
+    <group android:translateX="54" android:translateY="54">
+        <!-- Main currency exchange icon -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-20,-15 L20,-15 L20,-10 L-20,-10 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-20,10 L20,10 L20,15 L-20,15 Z" />
+        
+        <!-- Arrow indicators -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M15,-15 L25,-10 L15,-5 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-15,5 L-25,10 L-15,15 Z" />
+        
+        <!-- Central exchange symbol -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-8,-8 L8,-8 L8,8 L-8,8 Z"
+            android:strokeWidth="2"
+            android:strokeColor="@color/primary" />
+        
+        <!-- FiatX text representation (stylized) -->
+        <group android:translateY="25">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M-15,-3 L-10,-3 L-10,3 L-15,3 Z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M-8,-3 L-8,3 M-8,0 L-3,0" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M-1,-3 L4,-3 L1,0 L4,3 L-1,3" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M6,-3 L11,-3 L11,3 L6,3 M6,0 L11,0" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M13,-3 L18,3 M18,-3 L13,3" />
+        </group>
+    </group>
+</vector>

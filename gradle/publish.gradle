@@ -1,0 +1,113 @@
+// FiatX - Publishing Configuration
+// Gradle script for package publishing and distribution
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+// Publishing configuration
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.mohsin.fiatx'
+            artifactId = 'fiatx-android'
+            version = android.defaultConfig.versionName
+            
+            // Publish AAB and APK
+            artifact bundleReleaseAab
+            artifact assembleRelease
+            
+            pom {
+                name = 'FiatX'
+                description = 'Lightweight currency converter with real-time exchange rates'
+                url = 'https://github.com/muhammadmohsinnisar/fiatx'
+                
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id = 'mohsinnisar'
+                        name = 'Mohsin Nisar'
+                        email = 'mohsinnisarbutt60@gmail.com'
+                    }
+                }
+                
+                scm {
+                    connection = 'scm:git:git://github.com/muhammadmohsinnisar/fiatx.git'
+                    developerConnection = 'scm:git:ssh://github.com:muhammadmohsinnisar/fiatx.git'
+                    url = 'https://github.com/muhammadmohsinnisar/fiatx/tree/main'
+                }
+            }
+        }
+    }
+    
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/muhammadmohsinnisar/fiatx")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+        
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = project.findProperty("ossrh.username") ?: System.getenv("OSSRH_USERNAME")
+                password = project.findProperty("ossrh.password") ?: System.getenv("OSSRH_PASSWORD")
+            }
+        }
+    }
+}
+
+// Signing configuration
+signing {
+    def signingKey = findProperty("signing.key") ?: System.getenv("SIGNING_KEY")
+    def signingPassword = findProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD")
+    
+    if (signingKey && signingPassword) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.release
+    }
+}
+
+// Generate sources JAR
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// Generate Javadoc JAR
+task androidJavadocsJar(type: Jar, dependsOn: dokkaHtml) {
+    archiveClassifier.set('javadoc')
+    from dokkaHtml.outputDirectory
+}
+
+// Add artifacts to publication
+publishing.publications.release.artifact androidSourcesJar
+publishing.publications.release.artifact androidJavadocsJar
+
+// Release tasks
+task publishToGitHub {
+    dependsOn 'publishReleasePublicationToGitHubPackagesRepository'
+    group = 'publishing'
+    description = 'Publish to GitHub Packages'
+}
+
+task publishToMavenCentral {
+    dependsOn 'publishReleasePublicationToOSSRHRepository'
+    group = 'publishing'
+    description = 'Publish to Maven Central'
+}
+
+task publishAll {
+    dependsOn 'publishToGitHub', 'publishToMavenCentral'
+    group = 'publishing'
+    description = 'Publish to all repositories'
+}
