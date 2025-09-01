@@ -27,7 +27,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -55,12 +55,10 @@ jobs:
         fi
 
     - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.version.outputs.version }}
-        release_name: FiatX v${{ steps.version.outputs.version }}
+        name: FiatX v${{ steps.version.outputs.version }}
         body: |
           ## 🚀 FiatX v${{ steps.version.outputs.version }}
           
@@ -78,15 +76,7 @@ jobs:
           - Min SDK: 24 (Android 7.0)
           - Target SDK: 35 (Android 15)
           - Architecture: Universal APK
+        files: |
+          app/build/outputs/apk/release/app-release-unsigned.apk
         draft: false
         prerelease: false
-
-    - name: Upload Release APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
-        asset_name: FiatX-v${{ steps.version.outputs.version }}.apk
-        asset_content_type: application/vnd.android.package-archive
